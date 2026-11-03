@@ -1,6 +1,20 @@
 # Week 10: Enhanced Portfolio with Advanced CSS & Design Systems
 ## Transform Your Portfolio into a Professional, Animated Experience
 
+### Implementation status
+
+Required Parts 1–4 are implemented in this repository:
+- A shared CSS design-token system with light and dark themes.
+- Button, project-card, overlay, and navigation hover transitions.
+- One-time section entrance animations and staggered grid children using IntersectionObserver.
+- A theme toggle that transitions colors, spins once, and saves the choice in localStorage.
+
+Reduced-motion preferences are respected, and content remains visible without JavaScript or IntersectionObserver. Storage errors do not prevent theme switching. The responsive navigation wraps on small screens.
+
+Run locally with `python -m http.server 8000`, then visit `http://localhost:8000`. The Python server does not automatically reload the browser; refresh after saving changes. No package installation or build step is required.
+
+The original assignment guide remains below. Part 5 (typing, floating shapes, parallax) and the optional 3D flip/style-guide extensions are not implemented. Portfolio text, images, contact links, and the CV button remain starter placeholders.
+
 ### 🎯 Learning Objectives
 By completing this project, you will:
 - Implement a complete design system using CSS variables for colors, spacing, typography, and animation timing

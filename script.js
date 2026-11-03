@@ -6,9 +6,20 @@
 const themeToggle = document.querySelector('.theme-toggle');
 const root = document.documentElement;
 
-// TODO: Check for saved theme preference and apply it
+let currentTheme = 'light';
+try { currentTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'; } catch { /* Storage may be unavailable. */ }
+root.setAttribute('data-theme', currentTheme);
+themeToggle.setAttribute('aria-pressed', String(currentTheme === 'dark'));
 
-// TODO: Add click event listener to toggle theme
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+themeToggle.addEventListener('click', () => {
+    const theme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', theme);
+    themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
+    try { localStorage.setItem('theme', theme); } catch { /* Theme still works for this session. */ }
+    if (!reducedMotion.matches) themeToggle.classList.add('spinning');
+});
+themeToggle.addEventListener('animationend', () => themeToggle.classList.remove('spinning'));
 
 // ==========================================
 // SMOOTH SCROLLING FOR NAVIGATION
@@ -23,7 +34,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
         if (targetSection) {
             targetSection.scrollIntoView({
-                behavior: 'smooth',
+                behavior: reducedMotion.matches ? 'auto' : 'smooth',
                 block: 'start'
             });
         }
@@ -39,9 +50,20 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // TODO: Implement scroll-triggered animations
 // ==========================================
 
-// TODO: Create IntersectionObserver for entrance animations
+if ('IntersectionObserver' in window && !reducedMotion.matches) {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.animate-on-scroll, .stagger-children').forEach(el => observer.observe(el));
+    root.classList.add('scroll-animations');
+}
 
-// TODO: Observe all elements with .animate-on-scroll class
+// Content stays visible when animation support is unavailable.
 
 // ==========================================
 // PARALLAX EFFECT
